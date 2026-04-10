@@ -2,20 +2,23 @@
 import { features, featureMap } from "../data/features"
 import CommunityPortal from "../features/CommunityPortal/index.jsx"
 import DatasetExportPanel from "../components/DatasetExportPanel"
+import AISuggestions from "./AISuggestions"
+import OpenAPI from "./OpenAPI"
 
 export default function FeatureDetail() {
   const { id } = useParams()
   const nav = useNavigate()
-  const meta = features.find(f => f.id === Number(id))
+  const meta = features.find((f) => f.id === Number(id))
   const detail = featureMap[Number(id)]
 
-  if (!meta || !detail) return (
-    <div className="min-h-screen bg-black p-6">
-      <p className="text-zinc-400">Feature not found</p>
-    </div>
-  )
+  if (!meta || !detail) {
+    return (
+      <div className="min-h-screen bg-black p-6">
+        <p className="text-zinc-400">Feature not found</p>
+      </div>
+    )
+  }
 
-  // Feature 13 — AI Outfit Suggestions
   if (meta.id === 13) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#000", color: "#fff" }}>
@@ -31,7 +34,6 @@ export default function FeatureDetail() {
     )
   }
 
-  // Feature 15 — Open API
   if (meta.id === 15) {
     return (
       <div style={{ minHeight: "100vh", backgroundColor: "#000", color: "#fff" }}>
@@ -47,7 +49,6 @@ export default function FeatureDetail() {
     )
   }
 
-  // Feature 8 — Debate Board (external route)
   const featureRoutes = { 8: "/feature/8/debate" }
 
   return (
@@ -73,6 +74,38 @@ export default function FeatureDetail() {
               {meta.difficulty}
             </span>
           </div>
+          <div className="space-y-6 mb-8">
+            <div>
+              <p className="text-xs text-zinc-500 uppercase tracking-wide mb-2">Goal</p>
+              <p className="text-zinc-200">{detail.goal}</p>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 uppercase tracking-wide mb-2">Requirements</p>
+              <ul className="list-disc pl-5 space-y-1 text-zinc-300">
+                {detail.requirements.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 uppercase tracking-wide mb-2">Implementation Steps</p>
+              <ul className="list-disc pl-5 space-y-1 text-zinc-300">
+                {detail.steps.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs text-zinc-500 uppercase tracking-wide mb-2">Expected Output</p>
+              <ul className="list-disc pl-5 space-y-1 text-zinc-300">
+                {detail.output.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </>
+      )}
 
       {featureRoutes[meta.id] && (
         <button
@@ -83,9 +116,7 @@ export default function FeatureDetail() {
         </button>
       )}
 
-      {meta.id === 1 && (
-        <CommunityPortal />
-      )}
+      {meta.id === 1 && <CommunityPortal />}
 
       {meta.id === 11 && (
         <div className="mt-8">
