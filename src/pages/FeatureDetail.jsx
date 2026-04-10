@@ -1,7 +1,7 @@
 ﻿import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
-import AISuggestions from "./AISuggestions"
-import OpenAPI from "./OpenAPI"
+import CommunityPortal from "../features/CommunityPortal/index.jsx"
+import DatasetExportPanel from "../components/DatasetExportPanel"
 
 export default function FeatureDetail() {
   const { id } = useParams()
@@ -83,27 +83,15 @@ export default function FeatureDetail() {
         </button>
       )}
 
-      {featureRoutes[meta.id] && (
-        <button onClick={() => nav(featureRoutes[meta.id])}
-          className="w-full mb-6 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition-colors text-sm">
-          Launch Feature
-        </button>
+      {meta.id === 1 && (
+        <CommunityPortal />
       )}
 
-      {[
-        ["Goal",         detail.goal],
-        ["Requirements", detail.requirements],
-        ["Steps",        detail.steps],
-        ["Output",       detail.output]
-      ].map(([label, val]) => (
-        <div key={label} className="bg-zinc-900 rounded-xl p-4 mb-4 border border-zinc-800">
-          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
-          {Array.isArray(val)
-            ? <ul className="space-y-1">{val.map((v, i) => <li key={i} className="text-sm text-zinc-300">{v}</li>)}</ul>
-            : <p className="text-sm text-zinc-300">{val}</p>
-          }
+      {meta.id === 11 && (
+        <div className="mt-8">
+          <DatasetExportPanel />
         </div>
-      ))}
+      )}
     </div>
   )
 }

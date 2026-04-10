@@ -1,8 +1,8 @@
 export const feature11 = {
-  goal: "Export clothing data for external use",
-  requirements: ["JSON export", "CSV export", "Download trigger"],
-  steps: ["Convert data to format", "Trigger browser download"],
-  output: ["Export button", "JSON and CSV files"]
+  goal: "Allow users to download cultural data",
+  requirements: ["Export JSON/CSV", "Download button", "Dataset metadata"],
+  steps: ["Convert data to JSON/CSV", "Create download function", "Add UI for export", "Include metadata"],
+  output: ["Data downloadable", "Formats available"]
 }
 
 
