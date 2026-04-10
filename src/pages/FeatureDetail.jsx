@@ -1,9 +1,7 @@
-import { useParams, useNavigate } from "react-router-dom"
+﻿import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
-import CommunityPortal from "../features/CommunityPortal/index.jsx"
-import FabricIdentifierFeature from "../features/FabricIdentifierFeature/index.jsx"
-import MediaContributionFeature from "../features/MediaContributionFeature/index.jsx"
-import ClothingComparisonFeature from "../features/ClothingComparisonFeature/index.jsx"
+import AISuggestions from "./AISuggestions"
+import OpenAPI from "./OpenAPI"
 
 export default function FeatureDetail() {
   const { id } = useParams()
@@ -17,13 +15,46 @@ export default function FeatureDetail() {
     </div>
   )
 
+  // Feature 13 — AI Outfit Suggestions
+  if (meta.id === 13) {
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#000", color: "#fff" }}>
+        <div style={{ padding: "16px", maxWidth: "672px", margin: "0 auto" }}>
+          <button onClick={() => nav("/")}
+            style={{ fontSize:"13px", color:"#71717a", background:"transparent", border:"1px solid #27272a",
+              padding:"4px 12px", borderRadius:"8px", cursor:"pointer", marginBottom:"8px" }}>
+            ← Back
+          </button>
+        </div>
+        <AISuggestions />
+      </div>
+    )
+  }
+
+  // Feature 15 — Open API
+  if (meta.id === 15) {
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#000", color: "#fff" }}>
+        <div style={{ padding: "16px", maxWidth: "720px", margin: "0 auto" }}>
+          <button onClick={() => nav("/")}
+            style={{ fontSize:"13px", color:"#71717a", background:"transparent", border:"1px solid #27272a",
+              padding:"4px 12px", borderRadius:"8px", cursor:"pointer", marginBottom:"8px" }}>
+            ← Back
+          </button>
+        </div>
+        <OpenAPI />
+      </div>
+    )
+  }
+
+  // Feature 8 — Debate Board (external route)
+  const featureRoutes = { 8: "/feature/8/debate" }
+
   return (
     <div className="min-h-screen bg-black p-6 max-w-2xl mx-auto">
-      <button
-        onClick={() => nav("/")}
-        className="text-sm text-zinc-400 mb-6 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg"
-      >
-        ← Back
+      <button onClick={() => nav("/")}
+        className="text-sm text-zinc-400 mb-6 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg">
+        Back
       </button>
 
       {meta.id !== 1 && meta.id !== 14 && meta.id !== 5 && meta.id !== 7 && (
@@ -43,42 +74,36 @@ export default function FeatureDetail() {
             </span>
           </div>
 
-          {[
-            detail.goal && ["Goal", detail.goal],
-            detail.requirements && ["Requirements", detail.requirements],
-            detail.steps && ["Steps", detail.steps],
-            detail.output && ["Output", detail.output]
-          ].filter(Boolean).map(([label, val]) => (
-            <div key={label} className="bg-zinc-900 rounded-xl p-4 mb-4 border border-zinc-800">
-              <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
-              {Array.isArray(val)
-                ? <ul className="space-y-1">
-                    {val.map((v, i) => (
-                      <li key={i} className="text-sm text-zinc-300">• {v}</li>
-                    ))}
-                  </ul>
-                : <p className="text-sm text-zinc-300">{val}</p>
-              }
-            </div>
-          ))}
-        </>
+      {featureRoutes[meta.id] && (
+        <button
+          onClick={() => nav(featureRoutes[meta.id])}
+          className="w-full mb-6 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition-colors text-sm"
+        >
+          Launch Feature
+        </button>
       )}
 
-      {meta.id === 1 && (
-        <CommunityPortal />
+      {featureRoutes[meta.id] && (
+        <button onClick={() => nav(featureRoutes[meta.id])}
+          className="w-full mb-6 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition-colors text-sm">
+          Launch Feature
+        </button>
       )}
 
-      {meta.id === 14 && (
-        <FabricIdentifierFeature />
-      )}
-
-      {meta.id === 5 && (
-        <MediaContributionFeature />
-      )}
-
-      {meta.id === 7 && (
-        <ClothingComparisonFeature />
-      )}
+      {[
+        ["Goal",         detail.goal],
+        ["Requirements", detail.requirements],
+        ["Steps",        detail.steps],
+        ["Output",       detail.output]
+      ].map(([label, val]) => (
+        <div key={label} className="bg-zinc-900 rounded-xl p-4 mb-4 border border-zinc-800">
+          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
+          {Array.isArray(val)
+            ? <ul className="space-y-1">{val.map((v, i) => <li key={i} className="text-sm text-zinc-300">{v}</li>)}</ul>
+            : <p className="text-sm text-zinc-300">{val}</p>
+          }
+        </div>
+      ))}
     </div>
   )
 }
