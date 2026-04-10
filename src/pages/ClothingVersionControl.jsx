@@ -138,12 +138,11 @@ function ClothingCard({ item, isSelected, onSelect }) {
   )
 }
 
-function EditForm({ data, onChange, onSave, onCancel }) {
+function EditForm({ data, onSave, onCancel }) {
   const [form, setForm] = useState({ ...data })
 
   function handle(key, val) {
     setForm((p) => ({ ...p, [key]: val }))
-    onChange({ ...form, [key]: val })
   }
 
   const inputCls =
@@ -296,7 +295,6 @@ export default function ClothingVersionControl() {
   const [items, setItems] = useState(() => SEED_ITEMS.map(initVersionedItem))
   const [selectedId, setSelectedId] = useState(SEED_ITEMS[0].id)
   const [activeTab, setActiveTab] = useState("view") // view | edit | history | diff
-  const [draftForm, setDraftForm] = useState(null)
 
   // Diff state — pick two versions to compare
   const [diffA, setDiffA] = useState(0)
@@ -510,7 +508,6 @@ export default function ClothingVersionControl() {
                 </div>
                 <EditForm
                   data={latestSnapshot}
-                  onChange={setDraftForm}
                   onSave={handleSave}
                   onCancel={() => setActiveTab("view")}
                 />
