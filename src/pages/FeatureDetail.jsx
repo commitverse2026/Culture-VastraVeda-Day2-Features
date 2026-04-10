@@ -24,7 +24,7 @@ export default function FeatureDetail() {
         Back
       </button>
 
-      {meta.id !== 1 && meta.id !== 5 && (
+      {meta.id !== 1 && meta.id !== 14 && meta.id !== 5 && (
         <>
           <div className="flex items-center gap-3 mb-8">
             <span className="text-4xl">{meta.icon}</span>
