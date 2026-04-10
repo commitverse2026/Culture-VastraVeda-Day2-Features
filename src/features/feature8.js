@@ -1,26 +1,25 @@
 export const feature8 = {
-  goal: "Enable threaded community discussions",
-  requirements: ["Thread creation", "Nested replies", "Moderation queue"],
-  steps: ["Define thread structure", "Add comment CRUD", "Wire moderation"],
-  output: ["Threaded debate board", "Moderation tools"]
+  goal: "Enable threaded community discussions on controversial cultural clothing origins.",
+  requirements: [
+    "Threaded discussions linked to clothing items",
+    "Nested replies up to 3 levels",
+    "Moderator login with password",
+    "Moderator can resolve, reopen, delete threads",
+    "Filter by All / Open / Resolved",
+    "Resolution note on closed threads"
+  ],
+  steps: [
+    "Define thread data structure",
+    "Build recursive ReplyThread component",
+    "Add moderator login check",
+    "Add resolve / reopen / delete controls",
+    "Add filter buttons",
+    "Show resolution banner on closed threads"
+  ],
+  output: [
+    "Threaded debate board with nested replies",
+    "Moderator tools working",
+    "Filter by status working",
+    "Resolution note displayed"
+  ]
 }
-
-
-// 🧩 Feature 8 — Debate & Dispute Board
-// 🎯 GOAL
-// Enable discussions on controversial cultural origins.
-// 📌 REQUIREMENTS
-// Threaded discussions
-// Replies
-// Moderator controls
-// Resolution note
-// ⚙️ IMPLEMENTATION STEPS
-// Create discussion structure
-// Link to clothing item
-// Add comment/reply system
-// Add moderator role
-// Allow closing threads
-// ✅ EXPECTED OUTPUT
-// ✔ Users can debate
-//  ✔ Threads organized
-//  ✔ Moderator resolves discussions
