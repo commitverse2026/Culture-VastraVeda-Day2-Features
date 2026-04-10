@@ -1,11 +1,15 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
+import BadgeShelf from "../components/BadgeShelf"
+import { useBadges } from "../hooks/useBadges"
 
 export default function FeatureDetail() {
   const { id } = useParams()
   const nav = useNavigate()
   const meta = features.find(f => f.id === Number(id))
   const detail = featureMap[Number(id)]
+  const isFeature6 = Number(id) === 6
+  const { earnedBadges, lockedBadges, newBadges, userStats, loading } = useBadges("demo")
 
   if (!meta || !detail) return (
     <div className="min-h-screen bg-black p-6">
@@ -55,6 +59,19 @@ export default function FeatureDetail() {
           }
         </div>
       ))}
+
+      {isFeature6 && (
+        <div className="mt-6 mb-8">
+          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">Live demo — badge shelf</p>
+          <BadgeShelf
+            earnedBadges={earnedBadges}
+            lockedBadges={lockedBadges}
+            newBadges={newBadges}
+            userStats={userStats}
+            loading={loading}
+          />
+        </div>
+      )}
     </div>
   )
 }
