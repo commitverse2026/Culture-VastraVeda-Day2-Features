@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
 import CommunityPortal from "../features/CommunityPortal/index.jsx"
+import DatasetExportPanel from "../components/DatasetExportPanel"
 
 export default function FeatureDetail() {
   const { id } = useParams()
@@ -63,6 +64,12 @@ export default function FeatureDetail() {
 
       {meta.id === 1 && (
         <CommunityPortal />
+      )}
+
+      {meta.id === 11 && (
+        <div className="mt-8">
+          <DatasetExportPanel />
+        </div>
       )}
     </div>
   )
