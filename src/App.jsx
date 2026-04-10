@@ -6,6 +6,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/feature/12" element={<ClothingVersionControl />} />
       <Route path="/feature/:id" element={<FeatureDetail />} />
       <Route path="/feature/8/debate" element={<DebateBoard />} />
   
