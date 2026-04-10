@@ -1,6 +1,7 @@
 ﻿import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
 import CommunityPortal from "../features/CommunityPortal/index.jsx"
+import MediaContributionFeature from "../features/MediaContributionFeature/index.jsx"
 
 const featureRoutes = {
   8: "/feature/8/debate",
@@ -27,7 +28,7 @@ export default function FeatureDetail() {
         Back
       </button>
 
-      {meta.id !== 1 && (
+      {meta.id !== 1 && meta.id !== 5 && (
         <>
           <div className="flex items-center gap-3 mb-8">
             <span className="text-4xl">{meta.icon}</span>
