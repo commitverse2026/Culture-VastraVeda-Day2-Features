@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothing Heritage Badges | Gamified Rewards System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+        }
+
+        /* User Selector */
+        .user-selector {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .user-selector label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .user-selector select {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: white;
+        }
+
+        .level-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .level-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Badges Section */
+        .badges-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .badges-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .badge-card {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .badge-card.earned {
+            background: linear-gradient(135deg, #fef5e7 0%, #fff 100%);
+            border: 2px solid #f59e0b;
+        }
+
+        .badge-card.locked {
+            opacity: 0.6;
+            filter: grayscale(0.3);
+        }
+
+        .badge-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        .badge-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .badge-desc {
+            font-size: 0.7rem;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+
+        .badge-progress {
+            font-size: 0.7rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .badge-date {
+            font-size: 0.6rem;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        /* Contribution Form */
+        .contribution-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .contribution-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Recent Activity */
+        .activity-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .activity-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .activity-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 12px;
+            border-left: 3px solid #667eea;
+            margin-bottom: 10px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .activity-time {
+            font-size: 0.7rem;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        .badge-earned {
+            background: #fef3c7;
+            border-left-color: #f59e0b;
+        }
+
+        /* Milestone Notification */
+        .milestone-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            padding: 15px 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+            max-width: 350px;
+        }
+
+        .milestone-notification .title {
+            font-weight: bold;
+            color: #f59e0b;
+            margin-bottom: 5px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Profile Header */
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .profile-joined {
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app"></div>
+
+    <script>
+        // ==================== BADGE DEFINITIONS ====================
+        
+        const BADGE_RULES = [
+            {
+                id: 1,
+                name: "🌱 First Step",
+                icon: "🌱",
+                description: "Made your first contribution",
+                category: "milestone",
+                condition: (user) => user.totalContributions >= 1,
+                progress: (user) => Math.min(100, (user.totalContributions / 1) * 100)
+            },
+            {
+                id: 2,
+                name: "📝 Content Creator",
+                icon: "📝",
+                description: "Added 5 content pieces",
+                category: "content",
+                condition: (user) => user.contributionCounts.content >= 5,
+                progress: (user) => Math.min(100, (user.contributionCounts.content / 5) * 100)
+            },
+            {
+                id: 3,
+                name: "🌐 Translation Master",
+                icon: "🌐",
+                description: "Completed 10 translations",
+                category: "translation",
+                condition: (user) => user.contributionCounts.translation >= 10,
+                progress: (user) => Math.min(100, (user.contributionCounts.translation / 10) * 100)
+            },
+            {
+                id: 4,
+                name: "⭐ Quality Reviewer",
+                icon: "⭐",
+                description: "Reviewed 20 submissions",
+                category: "review",
+                condition: (user) => user.contributionCounts.review >= 20,
+                progress: (user) => Math.min(100, (user.contributionCounts.review / 20) * 100)
+            },
+            {
+                id: 5,
+                name: "🏅 Rising Star",
+                icon: "🏅",
+                description: "Reached 50 total points",
+                category: "milestone",
+                condition: (user) => user.totalPoints >= 50,
+                progress: (user) => Math.min(100, (user.totalPoints / 50) * 100)
+            },
+            {
+                id: 6,
+                name: "💎 Diamond Contributor",
+                icon: "💎",
+                description: "Reached 200 total points",
+                category: "milestone",
+                condition: (user) => user.totalPoints >= 200,
+                progress: (user) => Math.min(100, (user.totalPoints / 200) * 100)
+            },
+            {
+                id: 7,
+                name: "👘 Heritage Guardian",
+                icon: "👘",
+                description: "Added clothing from 5 different cultures",
+                category: "cultural",
+                condition: (user) => Object.keys(user.culturalContributions).length >= 5,
+                progress: (user) => Math.min(100, (Object.keys(user.culturalContributions).length / 5) * 100)
+            },
+            {
+                id: 8,
+                name: "🎯 Perfect Week",
+                icon: "🎯",
+                description: "Contributed 7 days in a row",
+                category: "streak",
+                condition: (user) => user.streakDays >= 7,
+                progress: (user) => Math.min(100, (user.streakDays / 7) * 100)
+            },
+            {
+                id: 9,
+                name: "📚 Knowledge Seeker",
+                icon: "📚",
+                description: "Added 15 content pieces",
+                category: "content",
+                condition: (user) => user.contributionCounts.content >= 15,
+                progress: (user) => Math.min(100, (user.contributionCounts.content / 15) * 100)
+            },
+            {
+                id: 10,
+                name: "🌍 Global Ambassador",
+                icon: "🌍",
+                description: "Translated into 3 different languages",
+                category: "translation",
+                condition: (user) => Object.keys(user.languagesTranslated).length >= 3,
+                progress: (user) => Math.min(100, (Object.keys(user.languagesTranslated).length / 3) * 100)
+            },
+            {
+                id: 11,
+                name: "🎉 100 Club",
+                icon: "🎉",
+                description: "Reached 100 total points",
+                category: "milestone",
+                condition: (user) => user.totalPoints >= 100,
+                progress: (user) => Math.min(100, (user.totalPoints / 100) * 100)
+            },
+            {
+                id: 12,
+                name: "🏆 Legendary",
+                icon: "🏆",
+                description: "Reached 500 total points",
+                category: "milestone",
+                condition: (user) => user.totalPoints >= 500,
+                progress: (user) => Math.min(100, (user.totalPoints / 500) * 100)
+            }
+        ];
+
+        // User data
+        let users = [
+            {
+                id: 1,
+                name: "Dr. Emily Rodriguez",
+                avatar: "ER",
+                joinDate: "2024-01-15",
+                totalContributions: 45,
+                totalPoints: 425,
+                contributionCounts: {
+                    content: 18,
+                    translation: 15,
+                    review: 12
+                },
+                culturalContributions: {
+                    "Spain": 8,
+                    "Mexico": 5,
+                    "Argentina": 3
+                },
+                languagesTranslated: {
+                    "es": 15,
+                    "fr": 8
+                },
+                streakDays: 12,
+                earnedBadges: [1, 2, 3, 5, 7, 9],
+                activityLog: [
+                    { id: 1, type: "content", title: "Added Flamenco dress guide", points: 15, date: "2024-01-20T10:30:00" },
+                    { id: 2, type: "translation", title: "Translated Sari article to Spanish", points: 10, date: "2024-01-19T15:45:00" },
+                    { id: 3, type: "review", title: "Reviewed 3 pending submissions", points: 5, date: "2024-01-18T09:20:00" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Wei Zhang",
+                avatar: "WZ",
+                joinDate: "2024-01-10",
+                totalContributions: 32,
+                totalPoints: 310,
+                contributionCounts: {
+                    content: 12,
+                    translation: 14,
+                    review: 6
+                },
+                culturalContributions: {
+                    "China": 10,
+                    "Japan": 4
+                },
+                languagesTranslated: {
+                    "zh": 14,
+                    "ja": 5
+                },
+                streakDays: 5,
+                earnedBadges: [1, 2, 3, 5],
+                activityLog: [
+                    { id: 1, type: "translation", title: "Translated Kimono guide to Chinese", points: 10, date: "2024-01-20T14:15:00" },
+                    { id: 2, type: "content", title: "Added Hanfu history article", points: 15, date: "2024-01-19T11:00:00" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Priya Kapoor",
+                avatar: "PK",
+                joinDate: "2024-01-05",
+                totalContributions: 28,
+                totalPoints: 265,
+                contributionCounts: {
+                    content: 14,
+                    translation: 8,
+                    review: 6
+                },
+                culturalContributions: {
+                    "India": 12,
+                    "Nepal": 2
+                },
+                languagesTranslated: {
+                    "hi": 8,
+                    "en": 3
+                },
+                streakDays: 3,
+                earnedBadges: [1, 2, 5],
+                activityLog: [
+                    { id: 1, type: "content", title: "Added Sari draping styles", points: 15, date: "2024-01-20T08:30:00" }
+                ]
+            }
+        ];
+
+        let currentUserId = 1;
+        let notificationQueue = [];
+
+        // Helper functions
+        function saveToLocalStorage() {
+            localStorage.setItem('badgeUsers', JSON.stringify(users));
+            localStorage.setItem('currentUserId', currentUserId);
+        }
+
+        function loadFromLocalStorage() {
+            const savedUsers = localStorage.getItem('badgeUsers');
+            const savedUserId = localStorage.getItem('currentUserId');
+            if (savedUsers) users = JSON.parse(savedUsers);
+            if (savedUserId) currentUserId = parseInt(savedUserId);
+        }
+
+        function getUser() {
+            return users.find(u => u.id === currentUserId);
+        }
+
+        function calculateTotalPoints(user) {
+            return user.totalPoints;
+        }
+
+        function checkAndAwardBadges(user, contributionType, contributionDetails) {
+            const newlyEarned = [];
+            
+            for (const badge of BADGE_RULES) {
+                if (!user.earnedBadges.includes(badge.id)) {
+                    if (badge.condition(user)) {
+                        user.earnedBadges.push(badge.id);
+                        newlyEarned.push(badge);
+                        
+                        // Add to activity log
+                        user.activityLog.unshift({
+                            id: Date.now(),
+                            type: "badge",
+                            title: `Earned badge: ${badge.name}`,
+                            points: 25,
+                            date: new Date().toISOString(),
+                            badge: badge
+                        });
+                    }
+                }
+            }
+            
+            if (newlyEarned.length > 0) {
+                showMilestoneNotification(newlyEarned);
+            }
+            
+            saveToLocalStorage();
+            return newlyEarned;
+        }
+
+        function showMilestoneNotification(badges) {
+            const notification = document.createElement('div');
+            notification.className = 'milestone-notification';
+            notification.innerHTML = `
+                <div class="title">🎉 New Badge${badges.length > 1 ? 's' : ''} Earned! 🎉</div>
+                ${badges.map(badge => `
+                    <div style="margin-top: 10px;">
+                        <span style="font-size: 1.5rem;">${badge.icon}</span>
+                        <strong>${badge.name}</strong>
+                        <div style="font-size: 0.8rem; color: #718096;">${badge.description}</div>
+                    </div>
+                `).join('')}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function addContribution(event) {
+            event.preventDefault();
+            
+            const user = getUser();
+            const type = document.getElementById('contributionType').value;
+            const title = document.getElementById('contributionTitle').value;
+            const culture = document.getElementById('contributionCulture').value;
+            const language = document.getElementById('contributionLanguage').value;
+            
+            if (!title) {
+                alert('Please enter contribution details');
+                return;
+            }
+            
+            let points = 0;
+            if (type === 'content') points = 15;
+            else if (type === 'translation') points = 10;
+            else if (type === 'review') points = 5;
+            
+            // Update user stats
+            user.totalContributions++;
+            user.totalPoints += points;
+            user.contributionCounts[type]++;
+            
+            // Track cultural contributions
+            if (culture && culture.trim()) {
+                if (!user.culturalContributions[culture]) {
+                    user.culturalContributions[culture] = 0;
+                }
+                user.culturalContributions[culture]++;
+            }
+            
+            // Track languages for translations
+            if (type === 'translation' && language && language.trim()) {
+                if (!user.languagesTranslated[language]) {
+                    user.languagesTranslated[language] = 0;
+                }
+                user.languagesTranslated[language]++;
+            }
+            
+            // Update streak
+            const lastActivity = user.activityLog[0];
+            const today = new Date().toDateString();
+            const lastDate = lastActivity ? new Date(lastActivity.date).toDateString() : null;
+            
+            if (lastDate === today) {
+                // Already contributed today, don't increase streak
+            } else if (lastDate === new Date(Date.now() - 86400000).toDateString()) {
+                user.streakDays++;
+            } else {
+                user.streakDays = 1;
+            }
+            
+            // Add to activity log
+            user.activityLog.unshift({
+                id: Date.now(),
+                type: type,
+                title: title,
+                points: points,
+                date: new Date().toISOString()
+            });
+            
+            // Limit activity log to 50 items
+            if (user.activityLog.length > 50) {
+                user.activityLog = user.activityLog.slice(0, 50);
+            }
+            
+            // Check for new badges
+            const newBadges = checkAndAwardBadges(user, type, { title, culture, language });
+            
+            saveToLocalStorage();
+            
+            // Show points notification
+            showPointsNotification(points, type);
+            
+            // Clear form
+            document.getElementById('contributionForm').reset();
+            
+            // Re-render
+            render();
+            
+            if (newBadges.length > 0) {
+                setTimeout(() => {
+                    render();
+                }, 100);
+            }
+        }
+
+        function showPointsNotification(points, type) {
+            const notification = document.createElement('div');
+            notification.className = 'milestone-notification';
+            notification.style.background = '#48bb78';
+            notification.style.color = 'white';
+            notification.innerHTML = `
+                <div style="text-align: center;">
+                    <span style="font-size: 1.2rem;">✨ +${points} points!</span>
+                    <div style="font-size: 0.85rem;">${type} contribution added</div>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+        function getBadgeStatus(user, badge) {
+            const earned = user.earnedBadges.includes(badge.id);
+            const progress = badge.progress(user);
+            return { earned, progress };
+        }
+
+        function getLevel(user) {
+            const points = user.totalPoints;
+            if (points >= 500) return { level: "Legendary", icon: "🏆", next: null };
+            if (points >= 200) return { level: "Diamond", icon: "💎", next: 500 };
+            if (points >= 100) return { level: "Gold", icon: "🥇", next: 200 };
+            if (points >= 50) return { level: "Silver", icon: "🥈", next: 100 };
+            return { level: "Bronze", icon: "🥉", next: 50 };
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) return "Today";
+            if (diffDays === 1) return "Yesterday";
+            if (diffDays < 7) return `${diffDays} days ago`;
+            return date.toLocaleDateString();
+        }
+
+        function showBadgeModal(badge, earned) {
+            const modalHtml = `
+                <div id="badgeModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-icon">${badge.icon}</div>
+                        <h3>${badge.name}</h3>
+                        <p style="margin: 15px 0; color: #718096;">${badge.description}</p>
+                        <div style="margin: 15px 0;">
+                            ${earned ? 
+                                '<span style="background: #48bb78; color: white; padding: 5px 15px; border-radius: 20px;">✓ Earned</span>' : 
+                                '<span style="background: #e2e8f0; color: #4a5568; padding: 5px 15px; border-radius: 20px;">🔒 Locked</span>'
+                            }
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn btn-primary" onclick="closeModal()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('badgeModal');
+            if (modal) modal.remove();
+        }
+
+        function switchUser(userId) {
+            currentUserId = userId;
+            saveToLocalStorage();
+            render();
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            if (!app) return;
+            
+            const user = getUser();
+            const level = getLevel(user);
+            const earnedBadgesList = BADGE_RULES.filter(b => user.earnedBadges.includes(b.id));
+            const lockedBadgesList = BADGE_RULES.filter(b => !user.earnedBadges.includes(b.id));
+            
+            // User selector options
+            let userOptions = '';
+            users.forEach(u => {
+                userOptions += `<option value="${u.id}" ${u.id === currentUserId ? 'selected' : ''}>${u.name}</option>`;
+            });
+            
+            // Badges HTML
+            let earnedBadgesHtml = '';
+            earnedBadgesList.forEach(badge => {
+                earnedBadgesHtml += `
+                    <div class="badge-card earned" onclick="showBadgeModal(${JSON.stringify(badge).replace(/"/g, '&quot;')}, true)">
+                        <div class="badge-icon">${badge.icon}</div>
+                        <div class="badge-name">${badge.name}</div>
+                        <div class="badge-desc">${badge.description}</div>
+                        <div class="badge-date">✓ Earned</div>
+                    </div>
+                `;
+            });
+            
+            let lockedBadgesHtml = '';
+            lockedBadgesList.forEach(badge => {
+                const { progress } = getBadgeStatus(user, badge);
+                lockedBadgesHtml += `
+                    <div class="badge-card locked" onclick="showBadgeModal(${JSON.stringify(badge).replace(/"/g, '&quot;')}, false)">
+                        <div class="badge-icon">🔒</div>
+                        <div class="badge-name">${badge.name}</div>
+                        <div class="badge-desc">${badge.description}</div>
+                        <div class="badge-progress">Progress: ${Math.round(progress)}%</div>
+                    </div>
+                `;
+            });
+            
+            // Activity HTML
+            let activityHtml = '';
+            user.activityLog.slice(0, 10).forEach(activity => {
+                const badgeClass = activity.type === 'badge' ? 'badge-earned' : '';
+                activityHtml += `
+                    <div class="activity-item ${badgeClass}">
+                        <div class="activity-title">
+                            ${activity.type === 'badge' ? '🏅 ' : 
+                              activity.type === 'content' ? '📝 ' : 
+                              activity.type === 'translation' ? '🌐 ' : '⭐ '}
+                            ${escapeHtml(activity.title)}
+                        </div>
+                        ${activity.points ? `<div style="font-size: 0.8rem; color: #48bb78;">+${activity.points} points</div>` : ''}
+                        <div class="activity-time">${formatDate(activity.date)}</div>
+                    </div>
+                `;
+            });
+            
+            if (activityHtml === '') {
+                activityHtml = '<div class="empty-state">No activity yet. Make your first contribution!</div>';
+            }
+            
+            const html = `
+                <div class="header">
+                    <h1>🏅 Clothing Heritage Badges</h1>
+                    <p>Earn badges, level up, and become a heritage champion!</p>
+                </div>
+                
+                <div class="user-selector">
+                    <div>
+                        <label>👤 Select User: </label>
+                        <select id="userSelect" onchange="switchUser(parseInt(this.value))">
+                            ${userOptions}
+                        </select>
+                    </div>
+                    <div class="level-info">
+                        <div class="level-badge">
+                            ${level.icon} Level ${level.level}
+                        </div>
+                        ${level.next ? `<div class="level-badge" style="background: #48bb78;">🎯 ${user.totalPoints}/${level.next} pts to next</div>` : '<div class="level-badge">🏆 Max Level!</div>'}
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value">${user.totalContributions}</div>
+                        <div class="stat-label">Total Contributions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value">${user.totalPoints}</div>
+                        <div class="stat-label">Total Points</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value">${user.contributionCounts.content}</div>
+                        <div class="stat-label">Content Added</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🌐</div>
+                        <div class="stat-value">${user.contributionCounts.translation}</div>
+                        <div class="stat-label">Translations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-value">${user.contributionCounts.review}</div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">${user.streakDays}</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                </div>
+                
+                <div class="main-grid">
+                    <div class="badges-section">
+                        <h2>🏅 Earned Badges (${earnedBadgesList.length}/${BADGE_RULES.length})</h2>
+                        <div class="badges-grid">
+                            ${earnedBadgesHtml || '<div class="empty-state">No badges earned yet. Start contributing!</div>'}
+                        </div>
+                        
+                        ${lockedBadgesList.length > 0 ? `
+                            <h2 style="margin-top: 30px;">🔒 Locked Badges</h2>
+                            <div class="badges-grid">
+                                ${lockedBadgesHtml}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div>
+                        <div class="contribution-section">
+                            <h2>✍️ Make a Contribution</h2>
+                            <form id="contributionForm" onsubmit="addContribution(event)">
+                                <div class="form-group">
+                                    <label>Contribution Type</label>
+                                    <select id="contributionType" required>
+                                        <option value="content">📝 Content (15 points)</option>
+                                        <option value="translation">🌐 Translation (10 points)</option>
+                                        <option value="review">⭐ Review (5 points)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Title / Description</label>
+                                    <input type="text" id="contributionTitle" placeholder="e.g., Added Sari draping guide" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Culture/Region (optional)</label>
+                                    <input type="text" id="contributionCulture" placeholder="e.g., India, Japan, Mexico">
+                                </div>
+                                <div class="form-group">
+                                    <label>Language (for translations)</label>
+                                    <input type="text" id="contributionLanguage" placeholder="e.g., Spanish, Hindi, Chinese">
+                                </div>
+                                <button type="submit" class="btn-submit">🚀 Submit Contribution</button>
+                            </form>
+                        </div>
+                        
+                        <div class="activity-section" style="margin-top: 25px;">
+                            <h2>📅 Recent Activity</h2>
+                            <div class="activity-list">
+                                ${activityHtml}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            app.innerHTML = html;
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Make functions global
+        window.addContribution = addContribution;
+        window.switchUser = switchUser;
+        window.showBadgeModal = showBadgeModal;
+        window.closeModal = closeModal;
+        
+        // Initialize
+        loadFromLocalStorage();
+        render();
+    </script>
+</body>
+</html>
