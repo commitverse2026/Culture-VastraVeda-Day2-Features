@@ -1,9 +1,7 @@
 import { useState } from "react"
 import { badgeProgress } from "../data/badges"
 
-// ---------------------------------------------------------------------------
-// BadgeTile
-// ---------------------------------------------------------------------------
+
 function BadgeTile({ badge, earned, isNew, userStats }) {
   const [hovered, setHovered] = useState(false)
   const pct = userStats ? badgeProgress(badge, userStats) : 0
@@ -61,9 +59,7 @@ function BadgeTile({ badge, earned, isNew, userStats }) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// ProgressRow — for locked badges
-// ---------------------------------------------------------------------------
+
 function ProgressRow({ badge, userStats }) {
   const val = userStats?.[badge.stat] ?? 0
   const pct = Math.min(100, Math.round((val / badge.threshold) * 100))
