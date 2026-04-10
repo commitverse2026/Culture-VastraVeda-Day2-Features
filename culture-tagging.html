@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Tagging System | Clothing & Fashion Tags</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .view-btn {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .view-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .view-btn:hover:not(.active) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .filter-title {
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-pill {
+            padding: 8px 18px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-pill:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+
+        .filter-pill.active {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .filter-pill.clear {
+            background: #ed8936;
+            border-color: #ed8936;
+            color: white;
+        }
+
+        .filter-pill.clear:hover {
+            background: #dd6b20;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #718096;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        /* Clothing Grid */
+        .clothing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .clothing-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .clothing-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-image {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #718096;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tag-pill {
+            padding: 4px 12px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-pill:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .card-meta {
+            font-size: 0.75rem;
+            color: #a0aec0;
+        }
+
+        /* Form Styles */
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+        .form-card h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .tags-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            min-height: 100px;
+        }
+
+        .tag-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            background: #f7fafc;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tag-checkbox:hover {
+            background: #e2e8f0;
+        }
+
+        .tag-checkbox input {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-warning {
+            background: #ed8936;
+        }
+
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+
+        /* Admin Tables */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .admin-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .icon-btn.edit {
+            background: #4299e1;
+            color: white;
+        }
+
+        .icon-btn.delete {
+            background: #ef4444;
+            color: white;
+        }
+
+        .icon-btn:hover {
+            opacity: 0.8;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #a0aec0;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app"></div>
+
+    <script>
+        // ==================== DATA ====================
+        
+        // Tags data structure
+        let tags = [
+            { id: 1, name: "Traditional", color: "#667eea" },
+            { id: 2, name: "Modern", color: "#48bb78" },
+            { id: 3, name: "Festival", color: "#ed8936" },
+            { id: 4, name: "Wedding", color: "#e53e3e" },
+            { id: 5, name: "Casual", color: "#4299e1" },
+            { id: 6, name: "Formal", color: "#9f7aea" },
+            { id: 7, name: "Summer", color: "#f6ad55" },
+            { id: 8, name: "Winter", color: "#63b3ed" }
+        ];
+
+        // Clothing items with tags
+        let clothingItems = [
+            {
+                id: 1,
+                name: "Kimono",
+                description: "Traditional Japanese garment",
+                imageIcon: "👘",
+                tagIds: [1, 3],
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 2,
+                name: "Sari",
+                description: "Elegant Indian drape",
+                imageIcon: "👗",
+                tagIds: [1, 4],
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 3,
+                name: "Business Suit",
+                description: "Professional formal wear",
+                imageIcon: "👔",
+                tagIds: [2, 6],
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 4,
+                name: "Hanbok",
+                description: "Korean traditional clothing",
+                imageIcon: "👘",
+                tagIds: [1, 3, 4],
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 5,
+                name: "Denim Jacket",
+                description: "Casual everyday wear",
+                imageIcon: "🧥",
+                tagIds: [2, 5],
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: 6,
+                name: "Kilt",
+                description: "Scottish traditional skirt",
+                imageIcon: "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+                tagIds: [1, 3],
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        // State
+        let currentView = "user"; // 'user' or 'admin'
+        let selectedTag = null;
+        let editingTag = null;
+        let editingItem = null;
+
+        // Helper functions
+        function saveToLocalStorage() {
+            localStorage.setItem('culturalTags', JSON.stringify(tags));
+            localStorage.setItem('clothingItems', JSON.stringify(clothingItems));
+        }
+
+        function loadFromLocalStorage() {
+            const savedTags = localStorage.getItem('culturalTags');
+            const savedItems = localStorage.getItem('clothingItems');
+            if (savedTags) tags = JSON.parse(savedTags);
+            if (savedItems) clothingItems = JSON.parse(savedItems);
+        }
+
+        function getTagById(tagId) {
+            return tags.find(t => t.id === tagId);
+        }
+
+        function getTagsForItem(item) {
+            return item.tagIds.map(id => getTagById(id)).filter(t => t);
+        }
+
+        function filterItemsByTag() {
+            if (!selectedTag) return clothingItems;
+            return clothingItems.filter(item => item.tagIds.includes(selectedTag));
+        }
+
+        // Tag Management Functions
+        function addTag(name) {
+            if (!name.trim()) return false;
+            const newTag = {
+                id: Date.now(),
+                name: name.trim(),
+                color: "#" + Math.floor(Math.random()*16777215).toString(16)
+            };
+            tags.push(newTag);
+            saveToLocalStorage();
+            render();
+            return true;
+        }
+
+        function updateTag(id, newName) {
+            const tag = tags.find(t => t.id === id);
+            if (tag && newName.trim()) {
+                tag.name = newName.trim();
+                saveToLocalStorage();
+                render();
+                return true;
+            }
+            return false;
+        }
+
+        function deleteTag(id) {
+            // Remove tag from all clothing items
+            clothingItems.forEach(item => {
+                item.tagIds = item.tagIds.filter(tagId => tagId !== id);
+            });
+            tags = tags.filter(t => t.id !== id);
+            if (selectedTag === id) selectedTag = null;
+            saveToLocalStorage();
+            render();
+        }
+
+        // Clothing Item Management
+        function addClothingItem(name, description, imageIcon, tagIds) {
+            const newItem = {
+                id: Date.now(),
+                name: name.trim(),
+                description: description.trim(),
+                imageIcon: imageIcon || "👕",
+                tagIds: tagIds,
+                createdAt: new Date().toISOString()
+            };
+            clothingItems.push(newItem);
+            saveToLocalStorage();
+            render();
+        }
+
+        function updateClothingItem(id, name, description, imageIcon, tagIds) {
+            const item = clothingItems.find(i => i.id === id);
+            if (item) {
+                item.name = name.trim();
+                item.description = description.trim();
+                item.imageIcon = imageIcon || "👕";
+                item.tagIds = tagIds;
+                saveToLocalStorage();
+                render();
+            }
+        }
+
+        function deleteClothingItem(id) {
+            clothingItems = clothingItems.filter(i => i.id !== id);
+            saveToLocalStorage();
+            render();
+        }
+
+        // Modal Functions
+        function showTagModal(tag = null) {
+            editingTag = tag;
+            const modalHtml = `
+                <div id="tagModal" class="modal">
+                    <div class="modal-content">
+                        <h3 style="margin-bottom: 20px;">${tag ? 'Edit Tag' : 'Add New Tag'}</h3>
+                        <div class="form-group">
+                            <label>Tag Name</label>
+                            <input type="text" id="tagName" value="${tag ? tag.name : ''}" placeholder="Enter tag name">
+                        </div>
+                        <div class="modal-actions">
+                            <button class="icon-btn" onclick="closeModal()" style="background: #e2e8f0;">Cancel</button>
+                            <button class="icon-btn" onclick="saveTag()" style="background: #48bb78; color: white;">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function showItemModal(item = null) {
+            editingItem = item;
+            const tagCheckboxes = tags.map(tag => `
+                <label class="tag-checkbox">
+                    <input type="checkbox" value="${tag.id}" ${item && item.tagIds.includes(tag.id) ? 'checked' : ''}>
+                    <span>${tag.name}</span>
+                </label>
+            `).join('');
+            
+            const modalHtml = `
+                <div id="itemModal" class="modal">
+                    <div class="modal-content" style="max-width: 600px;">
+                        <h3 style="margin-bottom: 20px;">${item ? 'Edit Clothing Item' : 'Add New Clothing Item'}</h3>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" id="itemName" value="${item ? item.name : ''}" placeholder="Enter clothing name">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="itemDescription" rows="3" placeholder="Enter description">${item ? item.description : ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Icon/Emoji</label>
+                            <input type="text" id="itemIcon" value="${item ? item.imageIcon : '👕'}" placeholder="Enter emoji or icon">
+                        </div>
+                        <div class="form-group">
+                            <label>Tags (select multiple)</label>
+                            <div class="tags-select" id="tagCheckboxes">
+                                ${tagCheckboxes}
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="icon-btn" onclick="closeModal()" style="background: #e2e8f0;">Cancel</button>
+                            <button class="icon-btn" onclick="saveItem()" style="background: #48bb78; color: white;">Save</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function saveTag() {
+            const name = document.getElementById('tagName').value;
+            if (editingTag) {
+                updateTag(editingTag.id, name);
+            } else {
+                addTag(name);
+            }
+            closeModal();
+        }
+
+        function saveItem() {
+            const name = document.getElementById('itemName').value;
+            const description = document.getElementById('itemDescription').value;
+            const icon = document.getElementById('itemIcon').value;
+            const selectedTags = Array.from(document.querySelectorAll('#tagCheckboxes input:checked'))
+                .map(cb => parseInt(cb.value));
+            
+            if (!name || !description) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            if (editingItem) {
+                updateClothingItem(editingItem.id, name, description, icon, selectedTags);
+            } else {
+                addClothingItem(name, description, icon, selectedTags);
+            }
+            closeModal();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('tagModal') || document.getElementById('itemModal');
+            if (modal) modal.remove();
+            editingTag = null;
+            editingItem = null;
+        }
+
+        // Render Functions
+        function renderUserView() {
+            const filteredItems = filterItemsByTag();
+            
+            let clothingHtml = '';
+            filteredItems.forEach(item => {
+                const itemTags = getTagsForItem(item);
+                clothingHtml += `
+                    <div class="clothing-card">
+                        <div class="card-image">
+                            ${item.imageIcon}
+                        </div>
+                        <div class="card-content">
+                            <div class="card-title">${escapeHtml(item.name)}</div>
+                            <div class="card-description">${escapeHtml(item.description)}</div>
+                            <div class="card-tags">
+                                ${itemTags.map(tag => `
+                                    <span class="tag-pill" onclick="filterByTag(${tag.id})" style="border-color: ${tag.color};">
+                                        #${escapeHtml(tag.name)}
+                                    </span>
+                                `).join('')}
+                            </div>
+                            <div class="card-meta">
+                                Added: ${new Date(item.createdAt).toLocaleDateString()}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (clothingHtml === '') {
+                clothingHtml = '<div class="empty-state">👕 No clothing items found. Add some in admin panel!</div>';
+            }
+            
+            // Build filter tags
+            let filterTagsHtml = '<button class="filter-pill clear" onclick="clearFilter()">✖ Clear Filter</button>';
+            tags.forEach(tag => {
+                filterTagsHtml += `
+                    <button class="filter-pill ${selectedTag === tag.id ? 'active' : ''}" onclick="filterByTag(${tag.id})">
+                        #${escapeHtml(tag.name)}
+                    </button>
+                `;
+            });
+            
+            return `
+                <div class="header">
+                    <h1>🏷️ Cultural Tagging System</h1>
+                    <p>Discover clothing items from different cultures | Click tags to filter</p>
+                </div>
+                
+                <div class="view-toggle">
+                    <button class="view-btn ${currentView === 'user' ? 'active' : ''}" onclick="switchView('user')">👗 Browse Clothing</button>
+                    <button class="view-btn ${currentView === 'admin' ? 'active' : ''}" onclick="switchView('admin')">⚙️ Admin Panel</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-title">
+                        🔍 Filter by Cultural Tags:
+                    </div>
+                    <div class="filter-tags">
+                        ${filterTagsHtml}
+                    </div>
+                </div>
+                
+                <div class="stats-bar">
+                    <div class="stat-card">
+                        <div class="number">${clothingItems.length}</div>
+                        <div class="label">Total Items</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${tags.length}</div>
+                        <div class="label">Cultural Tags</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${filteredItems.length}</div>
+                        <div class="label">Showing</div>
+                    </div>
+                </div>
+                
+                <div class="clothing-grid">
+                    ${clothingHtml}
+                </div>
+            `;
+        }
+        
+        function renderAdminView() {
+            // Tags management table
+            let tagsTableHtml = '';
+            tags.forEach(tag => {
+                tagsTableHtml += `
+                    <tr>
+                        <td>${tag.id}</td>
+                        <td><span style="display: inline-block; width: 20px; height: 20px; background: ${tag.color}; border-radius: 5px;"></span> ${escapeHtml(tag.name)}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="icon-btn edit" onclick="showTagModal(${JSON.stringify(tag).replace(/"/g, '&quot;')})">✏️ Edit</button>
+                                <button class="icon-btn delete" onclick="deleteTag(${tag.id})">🗑️ Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            if (tagsTableHtml === '') {
+                tagsTableHtml = '<tr><td colspan="3" class="empty-state">No tags created yet</td></tr>';
+            }
+            
+            // Clothing items management table
+            let itemsTableHtml = '';
+            clothingItems.forEach(item => {
+                const itemTags = getTagsForItem(item);
+                itemsTableHtml += `
+                    <tr>
+                        <td>${item.imageIcon}</td>
+                        <td><strong>${escapeHtml(item.name)}</strong><br><small>${escapeHtml(item.description)}</small></td>
+                        <td>${itemTags.map(t => `<span class="tag-pill" style="font-size: 0.7rem;">#${escapeHtml(t.name)}</span>`).join(' ')}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="icon-btn edit" onclick="showItemModal(${JSON.stringify(item).replace(/"/g, '&quot;')})">✏️ Edit</button>
+                                <button class="icon-btn delete" onclick="deleteClothingItem(${item.id})">🗑️ Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            if (itemsTableHtml === '') {
+                itemsTableHtml = '<tr><td colspan="4" class="empty-state">No clothing items added yet</td></tr>';
+            }
+            
+            return `
+                <div class="header">
+                    <h1>⚙️ Admin Dashboard</h1>
+                    <p>Manage cultural tags and clothing items</p>
+                </div>
+                
+                <div class="view-toggle">
+                    <button class="view-btn ${currentView === 'user' ? 'active' : ''}" onclick="switchView('user')">👗 Browse Clothing</button>
+                    <button class="view-btn ${currentView === 'admin' ? 'active' : ''}" onclick="switchView('admin')">⚙️ Admin Panel</button>
+                </div>
+                
+                <div class="form-card">
+                    <h2>🏷️ Manage Cultural Tags</h2>
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn-submit" style="width: auto; padding: 10px 20px;" onclick="showTagModal()">+ Add New Tag</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr><th>ID</th><th>Tag Name</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            ${tagsTableHtml}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="form-card">
+                    <h2>👕 Manage Clothing Items</h2>
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn-submit" style="width: auto; padding: 10px 20px;" onclick="showItemModal()">+ Add New Clothing Item</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr><th>Icon</th><th>Name & Description</th><th>Tags</th><th>Actions</th></tr>
+                        </thead>
+                        <tbody>
+                            ${itemsTableHtml}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        function render() {
+            const app = document.getElementById('app');
+            if (!app) return;
+            
+            const html = currentView === 'user' ? renderUserView() : renderAdminView();
+            app.innerHTML = html;
+        }
+        
+        // Global Functions
+        function switchView(view) {
+            currentView = view;
+            selectedTag = null;
+            render();
+        }
+        
+        function filterByTag(tagId) {
+            selectedTag = selectedTag === tagId ? null : tagId;
+            render();
+        }
+        
+        function clearFilter() {
+            selectedTag = null;
+            render();
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        // Make functions global
+        window.switchView = switchView;
+        window.filterByTag = filterByTag;
+        window.clearFilter = clearFilter;
+        window.showTagModal = showTagModal;
+        window.showItemModal = showItemModal;
+        window.saveTag = saveTag;
+        window.saveItem = saveItem;
+        window.closeModal = closeModal;
+        window.deleteTag = deleteTag;
+        window.deleteClothingItem = deleteClothingItem;
+        window.updateTag = updateTag;
+        window.updateClothingItem = updateClothingItem;
+        
+        // Initialize
+        loadFromLocalStorage();
+        render();
+    </script>
+</body>
+</html>
