@@ -1,6 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState } from "react" 
 import { features, featureMap } from "../data/features"
+import CommunityPortal from "../features/CommunityPortal/index.jsx"
+import MediaContributionFeature from "../features/MediaContributionFeature/index.jsx"
+
+const featureRoutes = {
+  8: "/feature/8/debate",
+}
 
 export default function FeatureDetail() {
   const { id } = useParams()
@@ -60,24 +66,38 @@ export default function FeatureDetail() {
         onClick={() => nav("/")}
         className="text-sm text-zinc-400 mb-6 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg"
       >
-        ← Back
+        Back
       </button>
 
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-8">
-        <span className="text-4xl">{meta.icon}</span>
-        <div>
-          <p className="text-xs text-zinc-500">Feature {meta.id}</p>
-          <h1 className="text-xl font-medium">{meta.title}</h1>
-        </div>
-        <span className={`ml-auto text-xs px-2 py-0.5 rounded-full font-medium ${
-          meta.difficulty === "Easy" ? "bg-green-900 text-green-300" :
-          meta.difficulty === "Hard" ? "bg-red-900 text-red-300" :
-          "bg-yellow-900 text-yellow-300"
-        }`}>
-          {meta.difficulty}
-        </span>
+{meta.id !== 1 && meta.id !== 5 && (
+  <>
+    {/* Header */}
+    <div className="flex items-center gap-3 mb-8">
+      <span className="text-4xl">{meta.icon}</span>
+      <div>
+        <p className="text-xs text-zinc-500">Feature {meta.id}</p>
+        <h1 className="text-xl font-medium">{meta.title}</h1>
       </div>
+      <span className={`ml-auto text-xs px-2 py-0.5 rounded-full font-medium ${
+        meta.difficulty === "Easy" ? "bg-green-900 text-green-300" :
+        meta.difficulty === "Hard" ? "bg-red-900 text-red-300" :
+        "bg-yellow-900 text-yellow-300"
+      }`}>
+        {meta.difficulty}
+      </span>
+    </div>
+
+    {/* Launch Button (repo feature) */}
+    {featureRoutes[meta.id] && (
+      <button
+        onClick={() => nav(featureRoutes[meta.id])}
+        className="w-full mb-6 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition-colors text-sm"
+      >
+        Launch Feature
+      </button>
+    )}
+  </>
+)}
 
       {/* Sections */}
       {[
@@ -91,7 +111,7 @@ export default function FeatureDetail() {
           {Array.isArray(val)
             ? <ul className="space-y-1">
                 {val.map((v, i) => (
-                  <li key={i} className="text-sm text-zinc-300">• {v}</li>
+                  <li key={i} className="text-sm text-zinc-300">{v}</li>
                 ))}
               </ul>
             : <p className="text-sm text-zinc-300">{val}</p>
