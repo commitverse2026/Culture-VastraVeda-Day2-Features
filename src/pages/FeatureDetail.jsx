@@ -15,12 +15,45 @@ export default function FeatureDetail() {
     </div>
   )
 
+  // Feature 13 — AI Outfit Suggestions
+  if (meta.id === 13) {
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#000", color: "#fff" }}>
+        <div style={{ padding: "16px", maxWidth: "672px", margin: "0 auto" }}>
+          <button onClick={() => nav("/")}
+            style={{ fontSize:"13px", color:"#71717a", background:"transparent", border:"1px solid #27272a",
+              padding:"4px 12px", borderRadius:"8px", cursor:"pointer", marginBottom:"8px" }}>
+            ← Back
+          </button>
+        </div>
+        <AISuggestions />
+      </div>
+    )
+  }
+
+  // Feature 15 — Open API
+  if (meta.id === 15) {
+    return (
+      <div style={{ minHeight: "100vh", backgroundColor: "#000", color: "#fff" }}>
+        <div style={{ padding: "16px", maxWidth: "720px", margin: "0 auto" }}>
+          <button onClick={() => nav("/")}
+            style={{ fontSize:"13px", color:"#71717a", background:"transparent", border:"1px solid #27272a",
+              padding:"4px 12px", borderRadius:"8px", cursor:"pointer", marginBottom:"8px" }}>
+            ← Back
+          </button>
+        </div>
+        <OpenAPI />
+      </div>
+    )
+  }
+
+  // Feature 8 — Debate Board (external route)
+  const featureRoutes = { 8: "/feature/8/debate" }
+
   return (
     <div className="min-h-screen bg-black p-6 max-w-2xl mx-auto">
-      <button
-        onClick={() => nav("/")}
-        className="text-sm text-zinc-400 mb-6 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg"
-      >
+      <button onClick={() => nav("/")}
+        className="text-sm text-zinc-400 mb-6 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg">
         Back
       </button>
 
