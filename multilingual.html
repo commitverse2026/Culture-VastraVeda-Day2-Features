@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multilingual Content Contribution | Translation Workflow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+        }
+
+        .lang-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .lang-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .lang-btn {
+            padding: 8px 20px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lang-btn:hover:not(.active) {
+            background: #f7fafc;
+            border-color: #cbd5e0;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #f7fafc;
+            padding: 8px 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: #718096;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+        }
+
+        .queue-item, .translator-item {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ed8936;
+        }
+
+        .queue-item h4, .translator-item h4 {
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .queue-meta, .translation-meta {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-bottom: 10px;
+        }
+
+        .queue-actions, .translation-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-accept {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-accept:hover {
+            background: #38a169;
+        }
+
+        .btn-translate {
+            background: #4299e1;
+            color: white;
+        }
+
+        .btn-translate:hover {
+            background: #3182ce;
+        }
+
+        .btn-complete {
+            background: #9f7aea;
+            color: white;
+        }
+
+        .btn-complete:hover {
+            background: #805ad5;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .status-in-progress {
+            background: #feebc8;
+            color: #c05621;
+        }
+
+        .status-translated {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .content-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .content-item {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+        }
+
+        .content-item h4 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .content-text {
+            color: #4a5568;
+            margin: 10px 0;
+        }
+
+        .content-lang {
+            font-size: 0.7rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+        }
+
+        .translator-select {
+            margin-bottom: 20px;
+        }
+
+        .translator-select select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .view-toggle {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .view-toggle button {
+            width: auto;
+            padding: 12px 30px;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .original-content {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 10px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app"></div>
+
+    <script>
+        // ==================== DATA ====================
+        
+        // Available languages
+        const AVAILABLE_LANGUAGES = [
+            { code: 'en', name: 'English', flag: '🇺🇸' },
+            { code: 'es', name: 'Español', flag: '🇪🇸' },
+            { code: 'fr', name: 'Français', flag: '🇫🇷' },
+            { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+            { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
+            { code: 'ja', name: '日本語', flag: '🇯🇵' },
+            { code: 'zh', name: '中文', flag: '🇨🇳' },
+            { code: 'ar', name: 'العربية', flag: '🇸🇦' }
+        ];
+
+        // Available translators
+        const TRANSLATORS = [
+            { id: 1, name: 'Alice Johnson', languages: ['es', 'fr'], email: 'alice@example.com' },
+            { id: 2, name: 'Bob Chen', languages: ['zh', 'ja'], email: 'bob@example.com' },
+            { id: 3, name: 'Carlos Rodriguez', languages: ['es', 'de'], email: 'carlos@example.com' },
+            { id: 4, name: 'Deepa Sharma', languages: ['hi', 'en'], email: 'deepa@example.com' },
+            { id: 5, name: 'Fatima Al-Rashid', languages: ['ar', 'fr'], email: 'fatima@example.com' }
+        ];
+
+        // Initial content submissions
+        let contentSubmissions = [
+            {
+                id: 1,
+                title: "Welcome to Our Platform",
+                content: "This is a multilingual platform where users can contribute content in their preferred language.",
+                language: "en",
+                status: "translated",
+                submittedBy: "user@example.com",
+                submittedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                translations: {
+                    es: {
+                        title: "Bienvenido a Nuestra Plataforma",
+                        content: "Esta es una plataforma multilingüe donde los usuarios pueden contribuir con contenido en su idioma preferido.",
+                        translatorId: 1,
+                        translatedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    fr: {
+                        title: "Bienvenue sur Notre Plateforme",
+                        content: "Ceci est une plateforme multilingue où les utilisateurs peuvent contribuer du contenu dans leur langue préférée.",
+                        translatorId: 1,
+                        translatedAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                }
+            },
+            {
+                id: 2,
+                title: "Getting Started Guide",
+                content: "Follow these steps to get started with our platform and make the most of your experience.",
+                language: "en",
+                status: "in-progress",
+                submittedBy: "user2@example.com",
+                submittedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                translations: {
+                    es: {
+                        title: "Guía de Inicio",
+                        content: "Siga estos pasos para comenzar con nuestra plataforma y aprovechar al máximo su experiencia.",
+                        translatorId: 3,
+                        translatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                }
+            }
+        ];
+
+        // Translation queue
+        let translationQueue = [
+            {
+                id: 101,
+                contentId: 2,
+                targetLanguage: "fr",
+                assignedTo: null,
+                status: "pending",
+                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+            },
+            {
+                id: 102,
+                contentId: 2,
+                targetLanguage: "de",
+                assignedTo: null,
+                status: "pending",
+                createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+            },
+            {
+                id: 103,
+                contentId: 1,
+                targetLanguage: "de",
+                assignedTo: null,
+                status: "pending",
+                createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+            }
+        ];
+
+        // State variables
+        let currentDisplayLanguage = "en";
+        let currentView = "contributor";
+        let selectedTranslator = null;
+
+        // Helper functions
+        function saveToLocalStorage() {
+            localStorage.setItem('contentSubmissions', JSON.stringify(contentSubmissions));
+            localStorage.setItem('translationQueue', JSON.stringify(translationQueue));
+        }
+
+        function loadFromLocalStorage() {
+            const savedSubmissions = localStorage.getItem('contentSubmissions');
+            const savedQueue = localStorage.getItem('translationQueue');
+            if (savedSubmissions) contentSubmissions = JSON.parse(savedSubmissions);
+            if (savedQueue) translationQueue = JSON.parse(savedQueue);
+        }
+
+        function getLanguageName(code) {
+            const lang = AVAILABLE_LANGUAGES.find(l => l.code === code);
+            return lang ? `${lang.flag} ${lang.name}` : code;
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                'pending': '<span class="status-badge status-pending">⏳ Pending</span>',
+                'in-progress': '<span class="status-badge status-in-progress">🔄 In Progress</span>',
+                'translated': '<span class="status-badge status-translated">✅ Translated</span>'
+            };
+            return badges[status] || badges.pending;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString();
+        }
+
+        // Core functions
+        function submitContent(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('contentTitle').value;
+            const content = document.getElementById('contentContent').value;
+            const language = document.getElementById('contentLanguage').value;
+            
+            if (!title || !content) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const newSubmission = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                language: language,
+                status: 'pending',
+                submittedBy: 'anonymous@user.com',
+                submittedAt: new Date().toISOString(),
+                translations: {}
+            };
+            
+            contentSubmissions.push(newSubmission);
+            
+            // Add to translation queue for all other languages
+            AVAILABLE_LANGUAGES.forEach(lang => {
+                if (lang.code !== language) {
+                    translationQueue.push({
+                        id: Date.now() + Math.random(),
+                        contentId: newSubmission.id,
+                        targetLanguage: lang.code,
+                        assignedTo: null,
+                        status: 'pending',
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            });
+            
+            saveToLocalStorage();
+            document.getElementById('contributionForm').reset();
+            render();
+            
+            alert('✅ Content submitted successfully! It has been added to the translation queue.');
+        }
+
+        function assignTranslation(queueId, translatorId) {
+            const queueItem = translationQueue.find(q => q.id === queueId);
+            if (queueItem) {
+                queueItem.assignedTo = translatorId;
+                queueItem.status = 'in-progress';
+                saveToLocalStorage();
+                render();
+                alert('✅ Translation assigned! You can now work on it.');
+            }
+        }
+
+        function showTranslationModal(queueId, contentId, targetLang) {
+            const content = contentSubmissions.find(c => c.id === contentId);
+            if (!content) return;
+            
+            const existingTranslation = content.translations[targetLang];
+            
+            const modalHtml = `
+                <div id="translationModal" class="modal">
+                    <div class="modal-content">
+                        <h3 style="margin-bottom: 20px;">📝 Translate Content</h3>
+                        <div class="original-content">
+                            <strong>Original (${getLanguageName(content.language)}):</strong>
+                            <div style="margin-top: 10px;"><strong>${escapeHtml(content.title)}</strong></div>
+                            <div style="margin-top: 5px;">${escapeHtml(content.content)}</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Target Language: ${getLanguageName(targetLang)}</label>
+                        </div>
+                        <div class="form-group">
+                            <label>Translated Title</label>
+                            <input type="text" id="transTitle" class="trans-title" value="${existingTranslation ? escapeHtml(existingTranslation.title) : ''}" placeholder="Enter translated title">
+                        </div>
+                        <div class="form-group">
+                            <label>Translated Content</label>
+                            <textarea id="transContent" class="trans-content" rows="5" placeholder="Enter translated content">${existingTranslation ? escapeHtml(existingTranslation.content) : ''}</textarea>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-sm" onclick="closeModal()" style="background: #e2e8f0;">Cancel</button>
+                            <button class="btn-sm" onclick="saveTranslation(${queueId}, ${contentId}, '${targetLang}')" style="background: #48bb78; color: white;">Save Translation</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function saveTranslation(queueId, contentId, targetLang) {
+            const transTitle = document.querySelector('#translationModal .trans-title').value;
+            const transContent = document.querySelector('#translationModal .trans-content').value;
+            
+            if (!transTitle || !transContent) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const content = contentSubmissions.find(c => c.id === contentId);
+            if (!content) return;
+            
+            // Save translation
+            if (!content.translations[targetLang]) {
+                content.translations[targetLang] = {};
+            }
+            content.translations[targetLang].title = transTitle;
+            content.translations[targetLang].content = transContent;
+            content.translations[targetLang].translatorId = selectedTranslator || 1;
+            content.translations[targetLang].translatedAt = new Date().toISOString();
+            
+            // Update queue status
+            const queueItem = translationQueue.find(q => q.id === queueId);
+            if (queueItem) {
+                queueItem.status = 'translated';
+            }
+            
+            // Update content status
+            const languagesToTranslate = AVAILABLE_LANGUAGES.filter(lang => lang.code !== content.language).length;
+            const completedTranslations = Object.keys(content.translations).length;
+            
+            if (completedTranslations >= languagesToTranslate) {
+                content.status = 'translated';
+            }
+            
+            saveToLocalStorage();
+            closeModal();
+            render();
+            
+            alert('✅ Translation saved successfully!');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('translationModal');
+            if (modal) modal.remove();
+        }
+
+        function switchLanguage(langCode) {
+            currentDisplayLanguage = langCode;
+            render();
+        }
+
+        function switchView(view) {
+            currentView = view;
+            selectedTranslator = null;
+            render();
+        }
+
+        function selectTranslator() {
+            const select = document.getElementById('translatorSelect');
+            if (select) {
+                selectedTranslator = parseInt(select.value);
+                render();
+            }
+        }
+
+        // Render functions
+        function renderContributorView() {
+            const filteredContent = contentSubmissions.filter(item => 
+                item.language === currentDisplayLanguage || item.translations[currentDisplayLanguage]
+            );
+            
+            let contentHtml = '';
+            filteredContent.forEach(item => {
+                const displayItem = item.language === currentDisplayLanguage 
+                    ? item 
+                    : { ...item, title: item.translations[currentDisplayLanguage].title, content: item.translations[currentDisplayLanguage].content };
+                
+                contentHtml += `
+                    <div class="content-item">
+                        <h4>📄 ${escapeHtml(displayItem.title)}</h4>
+                        <div class="content-text">${escapeHtml(displayItem.content)}</div>
+                        <div class="content-lang">
+                            ${getLanguageName(item.language)} • Status: ${getStatusBadge(item.status)}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (contentHtml === '') {
+                contentHtml = '<div class="empty-state">📭 No content available in this language yet.</div>';
+            }
+            
+            let langOptions = '';
+            AVAILABLE_LANGUAGES.forEach(lang => {
+                langOptions += `<option value="${lang.code}">${lang.flag} ${lang.name}</option>`;
+            });
+            
+            return `
+                <div class="header">
+                    <h1>🌍 Multilingual Content Contribution</h1>
+                    <p>Submit content in your language | Help translate content for global audiences</p>
+                </div>
+                
+                <div class="lang-bar">
+                    <div class="lang-selector">
+                        <strong>🔤 Display Content in:</strong>
+                        ${AVAILABLE_LANGUAGES.map(lang => `
+                            <button class="lang-btn ${currentDisplayLanguage === lang.code ? 'active' : ''}" onclick="switchLanguage('${lang.code}')">
+                                ${lang.flag} ${lang.name}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="number">${contentSubmissions.length}</div>
+                            <div class="label">Total Submissions</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">${translationQueue.filter(q => q.status === 'translated').length}</div>
+                            <div class="label">Translated</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">${translationQueue.filter(q => q.status === 'pending').length}</div>
+                            <div class="label">Pending</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="main-grid">
+                    <div class="card">
+                        <h2>✍️ Submit New Content</h2>
+                        <form id="contributionForm" onsubmit="submitContent(event)">
+                            <div class="form-group">
+                                <label>📝 Title</label>
+                                <input type="text" id="contentTitle" placeholder="Enter title" required>
+                            </div>
+                            <div class="form-group">
+                                <label>📄 Content</label>
+                                <textarea id="contentContent" placeholder="Write your content here..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>🌐 Language</label>
+                                <select id="contentLanguage" required>
+                                    ${langOptions}
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-submit">🚀 Submit Content</button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>📖 Content in ${getLanguageName(currentDisplayLanguage)}</h2>
+                        <div class="content-list">
+                            ${contentHtml}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="view-toggle">
+                    <button onclick="switchView('translator')" class="btn-submit" style="background: #ed8936;">🔄 Switch to Translator Dashboard</button>
+                </div>
+            `;
+        }
+
+        function renderTranslatorView() {
+            let availableQueue = [];
+            let assignedQueue = [];
+            
+            if (selectedTranslator) {
+                const translator = TRANSLATORS.find(t => t.id === selectedTranslator);
+                if (translator) {
+                    availableQueue = translationQueue.filter(q => 
+                        q.status === 'pending' && translator.languages.includes(q.targetLanguage)
+                    );
+                    assignedQueue = translationQueue.filter(q => 
+                        q.assignedTo === selectedTranslator && q.status === 'in-progress'
+                    );
+                }
+            } else {
+                availableQueue = translationQueue.filter(q => q.status === 'pending');
+                assignedQueue = translationQueue.filter(q => q.status === 'in-progress');
+            }
+            
+            const completedTranslations = translationQueue.filter(q => q.status === 'translated');
+            
+            let availableHtml = '';
+            availableQueue.forEach(item => {
+                const content = contentSubmissions.find(c => c.id === item.contentId);
+                if (content) {
+                    availableHtml += `
+                        <div class="queue-item">
+                            <h4>📝 ${escapeHtml(content.title)}</h4>
+                            <div class="queue-meta">
+                                From: ${getLanguageName(content.language)} → To: ${getLanguageName(item.targetLanguage)}
+                            </div>
+                            <div class="queue-meta">Submitted: ${formatDate(content.submittedAt)}</div>
+                            <div class="queue-actions">
+                                ${selectedTranslator ? 
+                                    `<button class="btn-sm btn-accept" onclick="assignTranslation(${item.id}, ${selectedTranslator})">Accept & Translate</button>` :
+                                    `<button class="btn-sm btn-translate" onclick="showTranslationModal(${item.id}, ${item.contentId}, '${item.targetLanguage}')">Translate Now</button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (availableHtml === '') {
+                availableHtml = '<div class="empty-state">🎉 No pending translations available!</div>';
+            }
+            
+            let assignedHtml = '';
+            assignedQueue.forEach(item => {
+                const content = contentSubmissions.find(c => c.id === item.contentId);
+                if (content) {
+                    assignedHtml += `
+                        <div class="translator-item">
+                            <h4>🔄 ${escapeHtml(content.title)}</h4>
+                            <div class="translation-meta">
+                                Translate to: ${getLanguageName(item.targetLanguage)}
+                            </div>
+                            <div class="queue-actions">
+                                <button class="btn-sm btn-complete" onclick="showTranslationModal(${item.id}, ${item.contentId}, '${item.targetLanguage}')">
+                                    Complete Translation
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            if (assignedHtml === '') {
+                assignedHtml = '<div class="empty-state">📋 No assigned translations in progress.</div>';
+            }
+            
+            let translatorOptions = '<option value="">-- Select Translator --</option>';
+            TRANSLATORS.forEach(t => {
+                translatorOptions += `<option value="${t.id}">${t.name} (${t.languages.map(l => getLanguageName(l)).join(', ')})</option>`;
+            });
+            
+            return `
+                <div class="header">
+                    <h1>🎯 Translator Dashboard</h1>
+                    <p>Manage translations | Track progress | Complete tasks</p>
+                </div>
+                
+                <div class="lang-bar">
+                    <div class="translator-select" style="flex: 1;">
+                        <strong>👤 Select Translator:</strong>
+                        <select id="translatorSelect" onchange="selectTranslator()" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 10px;">
+                            ${translatorOptions}
+                        </select>
+                    </div>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="number">${translationQueue.filter(q => q.status === 'pending').length}</div>
+                            <div class="label">Pending</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">${translationQueue.filter(q => q.status === 'in-progress').length}</div>
+                            <div class="label">In Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="number">${completedTranslations.length}</div>
+                            <div class="label">Completed</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="main-grid">
+                    <div class="card">
+                        <h2>📋 Available for Translation</h2>
+                        <div class="content-list">
+                            ${availableHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>⚙️ My Assigned Tasks</h2>
+                        <div class="content-list">
+                            ${assignedHtml}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="view-toggle">
+                    <button onclick="switchView('contributor')" class="btn-submit" style="background: #667eea;">🔄 Switch to Contributor View</button>
+                </div>
+            `;
+        }
+
+        function render() {
+            const app = document.getElementById('app');
+            if (!app) return;
+            
+            let html = currentView === 'contributor' ? renderContributorView() : renderTranslatorView();
+            app.innerHTML = html;
+        }
+
+        // Make functions global
+        window.submitContent = submitContent;
+        window.switchLanguage = switchLanguage;
+        window.switchView = switchView;
+        window.assignTranslation = assignTranslation;
+        window.showTranslationModal = showTranslationModal;
+        window.saveTranslation = saveTranslation;
+        window.closeModal = closeModal;
+        window.selectTranslator = selectTranslator;
+
+        // Initialize
+        loadFromLocalStorage();
+        render();
+    </script>
+</body>
+</html>
