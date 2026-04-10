@@ -1,12 +1,6 @@
 ﻿import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
-import CommunityPortal from "../features/CommunityPortal/index.jsx"
-import FabricIdentifierFeature from "../features/FabricIdentifierFeature/index.jsx"
-import MediaContributionFeature from "../features/MediaContributionFeature/index.jsx"
-
-const featureRoutes = {
-  8: "/feature/8/debate",
-}
+import AISuggestions from "./AISuggestions"
 
 export default function FeatureDetail() {
   const { id } = useParams()
@@ -19,6 +13,28 @@ export default function FeatureDetail() {
       <p className="text-zinc-400">Feature not found</p>
     </div>
   )
+
+  // Feature 13 — render full page directly (no separate route needed)
+  if (meta.id === 13) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <div className="p-4 max-w-2xl mx-auto">
+          <button
+            onClick={() => nav("/")}
+            className="text-sm text-zinc-400 mb-4 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg"
+          >
+            ← Back
+          </button>
+        </div>
+        <AISuggestions />
+      </div>
+    )
+  }
+
+  // Feature 8 — navigates to debate board
+  const featureRoutes = {
+    8: "/feature/8/debate",
+  }
 
   return (
     <div className="min-h-screen bg-black p-6 max-w-2xl mx-auto">
@@ -55,17 +71,33 @@ export default function FeatureDetail() {
         </button>
       )}
 
-      {meta.id === 1 && (
-        <CommunityPortal />
+      {featureRoutes[meta.id] && (
+        <button
+          onClick={() => nav(featureRoutes[meta.id])}
+          className="w-full mb-6 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition-colors text-sm"
+        >
+          Launch Feature
+        </button>
       )}
 
-      {meta.id === 14 && (
-        <FabricIdentifierFeature />
-      )}
-
-      {meta.id === 5 && (
-        <MediaContributionFeature />
-      )}
+      {[
+        ["Goal",         detail.goal],
+        ["Requirements", detail.requirements],
+        ["Steps",        detail.steps],
+        ["Output",       detail.output]
+      ].map(([label, val]) => (
+        <div key={label} className="bg-zinc-900 rounded-xl p-4 mb-4 border border-zinc-800">
+          <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
+          {Array.isArray(val)
+            ? <ul className="space-y-1">
+                {val.map((v, i) => (
+                  <li key={i} className="text-sm text-zinc-300">{v}</li>
+                ))}
+              </ul>
+            : <p className="text-sm text-zinc-300">{val}</p>
+          }
+        </div>
+      ))}
     </div>
   )
 }
