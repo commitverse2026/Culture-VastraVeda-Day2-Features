@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 
-const IMPLEMENTED = [12, 15]
+const IMPLEMENTED = [12, 13, 15]
 
 export default function FeatureCard({ feature }) {
   const nav = useNavigate()
