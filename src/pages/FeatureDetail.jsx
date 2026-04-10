@@ -2,6 +2,8 @@
 import { features, featureMap } from "../data/features"
 import CommunityPortal from "../features/CommunityPortal/index.jsx"
 import DatasetExportPanel from "../components/DatasetExportPanel"
+import AISuggestions from "./AISuggestions"
+import OpenAPI from "./OpenAPI"
 
 export default function FeatureDetail() {
   const { id } = useParams()
@@ -73,6 +75,8 @@ export default function FeatureDetail() {
               {meta.difficulty}
             </span>
           </div>
+        </>
+      )}
 
       {featureRoutes[meta.id] && (
         <button
