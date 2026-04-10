@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const MODERATOR_PASSWORD = "mod123"
@@ -139,7 +139,7 @@ export default function DebateBoard() {
   const [resolutionText, setResolutionText] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
   const [newThread, setNewThread] = useState({ clothingItem: "", title: "", author: "" })
-  const idRef = { current: Date.now() }
+  const idRef = useRef(Math.max(...initialThreads.map((thread) => thread.id), 0))
 
   const handleModLogin = () => {
     if (modInput === MODERATOR_PASSWORD) {
