@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom"
+﻿import { useParams, useNavigate } from "react-router-dom"
 import { features, featureMap } from "../data/features"
 import CommunityPortal from "../features/CommunityPortal/index.jsx"
 import DatasetExportPanel from "../components/DatasetExportPanel"
@@ -21,10 +21,10 @@ export default function FeatureDetail() {
         onClick={() => nav("/")}
         className="text-sm text-zinc-400 mb-6 hover:text-white border border-zinc-800 px-3 py-1.5 rounded-lg"
       >
-        ← Back
+        Back
       </button>
 
-      {meta.id !== 1 && (
+      {meta.id !== 1 && meta.id !== 5 && (
         <>
           <div className="flex items-center gap-3 mb-8">
             <span className="text-4xl">{meta.icon}</span>
@@ -41,25 +41,13 @@ export default function FeatureDetail() {
             </span>
           </div>
 
-          {[
-            detail.goal && ["Goal", detail.goal],
-            detail.requirements && ["Requirements", detail.requirements],
-            detail.steps && ["Steps", detail.steps],
-            detail.output && ["Output", detail.output]
-          ].filter(Boolean).map(([label, val]) => (
-            <div key={label} className="bg-zinc-900 rounded-xl p-4 mb-4 border border-zinc-800">
-              <p className="text-xs text-zinc-500 uppercase tracking-widest mb-3">{label}</p>
-              {Array.isArray(val)
-                ? <ul className="space-y-1">
-                    {val.map((v, i) => (
-                      <li key={i} className="text-sm text-zinc-300">• {v}</li>
-                    ))}
-                  </ul>
-                : <p className="text-sm text-zinc-300">{val}</p>
-              }
-            </div>
-          ))}
-        </>
+      {featureRoutes[meta.id] && (
+        <button
+          onClick={() => nav(featureRoutes[meta.id])}
+          className="w-full mb-6 bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl transition-colors text-sm"
+        >
+          Launch Feature
+        </button>
       )}
 
       {meta.id === 1 && (
